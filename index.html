@@ -1,1 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>UPI Fraud Awareness Assistant</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="chat-container">
+
+        <div class="chat-header">
+            <div>
+                <h1>🛡️ UPI Safety Assistant</h1>
+                <p>Your personal UPI fraud awareness coach</p>
+            </div>
+        </div>
+
+        <div id="chat-box" class="chat-box">
+
+            <div class="message bot">
+                👋 Hi! I'm the <strong>UPI Safety Assistant</strong>.
+                <br><br>
+                Tell me what happened with a suspicious UPI payment, call, QR code, refund, job offer, or message.
+                <br><br>
+                I'll help you figure out whether it could be a scam.
+            </div>
+
+        </div>
+
+        <div class="input-area">
+
+            <input
+                type="text"
+                id="user-input"
+                placeholder="Describe what happened..."
+                autocomplete="off"
+            >
+
+            <button id="send-button">Send</button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
