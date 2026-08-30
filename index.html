@@ -4,48 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>UPI Fraud Awareness Assistant</title>
+    <title>UPI Safety Assistant</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="chat-container">
+    <main class="chat-container">
 
-        <div class="chat-header">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="shield">🛡️</div>
+
             <div>
-                <h1>🛡️ UPI Safety Assistant</h1>
-                <p>Your personal UPI fraud awareness coach</p>
+                <h1>UPI Safety Assistant</h1>
+                <p>Your personal fraud awareness coach</p>
             </div>
-        </div>
+        </header>
 
-        <div id="chat-box" class="chat-box">
+
+        <!-- Chat messages -->
+        <section
+            id="chat-box"
+            class="chat-box"
+            aria-live="polite"
+        >
 
             <div class="message bot">
-                👋 Hi! I'm the <strong>UPI Safety Assistant</strong>.
-                <br><br>
-                Tell me what happened with a suspicious UPI payment, call, QR code, refund, job offer, or message.
-                <br><br>
-                I'll help you figure out whether it could be a scam.
+                Hi! 👋 Tell me what happened, and I'll help you figure out whether it could be a UPI scam.
             </div>
 
-        </div>
+        </section>
 
-        <div class="input-area">
+
+        <!-- Message input -->
+        <form id="chat-form" class="input-area">
 
             <input
                 type="text"
                 id="user-input"
                 placeholder="Describe what happened..."
                 autocomplete="off"
+                aria-label="Describe what happened"
             >
 
-            <button id="send-button">Send</button>
+            <button
+                type="submit"
+                id="send-button"
+            >
+                Send
+            </button>
 
-        </div>
+        </form>
 
-    </div>
+    </main>
+
 
     <script src="script.js"></script>
 
