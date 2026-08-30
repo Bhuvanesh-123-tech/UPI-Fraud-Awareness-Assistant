@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UPI Safety Assistant</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="chat-container">
+
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="shield">🛡️</div>
+
+            <div>
+                <h1>UPI Safety Assistant</h1>
+                <p>Your personal fraud awareness coach</p>
+            </div>
+        </header>
+
+
+        <!-- Chat messages -->
+        <section
+            id="chat-box"
+            class="chat-box"
+            aria-live="polite"
+        >
+
+            <div class="message bot">
+                Hi! 👋 Tell me what happened, and I'll help you figure out whether it could be a UPI scam.
+            </div>
+
+        </section>
+
+
+        <!-- Message input -->
+        <form id="chat-form" class="input-area">
+
+            <input
+                type="text"
+                id="user-input"
+                placeholder="Describe what happened..."
+                autocomplete="off"
+                aria-label="Describe what happened"
+            >
+
+            <button
+                type="submit"
+                id="send-button"
+            >
+                Send
+            </button>
+
+        </form>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
