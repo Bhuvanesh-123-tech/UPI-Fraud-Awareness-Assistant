@@ -52,7 +52,7 @@ async function sendMessage() {
     addLoadingMessage();
 
     try {
-        const response = await fetch("/chat", {
+        const response = await fetch("https://upi-fraud-awareness-assistant.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
