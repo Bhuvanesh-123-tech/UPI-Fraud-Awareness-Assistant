@@ -8,7 +8,9 @@ let conversation = [];
 function addMessage(text, sender) {
     const message = document.createElement("div");
     message.className = `message ${sender}`;
-    message.innerHTML = text.replace(/\n/g, "<br>");
+   message.innerHTML = text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\n/g, "<br>");
     chatBox.appendChild(message);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -50,7 +52,7 @@ async function sendMessage() {
     addLoadingMessage();
 
     try {
-        const response = await fetch("/chat", {
+        const response = await fetch("https://upi-fraud-awareness-assistant.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
