@@ -2,56 +2,37 @@ const chatBox = document.getElementById("chat-box");
 const userInput = document.getElementById("user-input");
 const sendButton = document.getElementById("send-button");
 
-
 function addMessage(text, sender) {
-
     const message = document.createElement("div");
 
-    message.classList.add("message", sender);
-
-    message.innerHTML = text;
+    message.className = "message " + sender;
+    message.textContent = text;
 
     chatBox.appendChild(message);
-
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-
 function sendMessage() {
-
     const text = userInput.value.trim();
 
-    if (text === "") {
-        return;
-    }
+    if (!text) return;
 
-    // Add user's message
     addMessage(text, "user");
 
-    // Clear input
     userInput.value = "";
 
-    // Temporary chatbot response
-    setTimeout(() => {
-
+    setTimeout(function () {
         addMessage(
-            "Thanks for telling me. I'm analyzing the situation...",
+            "Thanks! I'm analyzing your situation...",
             "bot"
         );
-
     }, 500);
 }
 
-
-// Send when button is clicked
 sendButton.addEventListener("click", sendMessage);
 
-
-// Send when Enter is pressed
 userInput.addEventListener("keydown", function(event) {
-
     if (event.key === "Enter") {
         sendMessage();
     }
-
 });
