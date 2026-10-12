@@ -15,7 +15,7 @@ const ai = new GoogleGenAI({
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname));
 
 app.post("/chat", async (req, res) => {
     try {
@@ -80,6 +80,15 @@ You are an awareness assistant, not a bank employee or official investigator.
             ]
         }));
 
+contents.push({
+    role: "user",
+    parts: [
+        {
+            text: message
+        }
+    ]
+});
+        
         const response = await ai.models.generateContent({
             model: "gemini-3.6-flash",
             contents: contents,
