@@ -102,5 +102,5 @@ You are an awareness assistant, not a bank employee or official investigator.
 });
 
 app.listen(PORT, () => {
-    console.log(`UPI Safety Assistant running at https://bhuvanesh-123-tech.github.io/UPI-Fraud-Awareness-Assistant`);
+    console.log(`UPI Safety Assistant running at http://localhost:${PORT}`);
 });
