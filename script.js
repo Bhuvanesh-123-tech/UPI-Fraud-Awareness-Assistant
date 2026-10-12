@@ -82,12 +82,12 @@ async function sendMessage() {
 
         removeLoadingMessage();
 
-        addMessage(
-            "Sorry, I couldn't connect to the safety assistant right now. Please try again.",
-            "bot"
-        );
+      addMessage(
+    "Sorry, the assistant encountered an error. Please check the connection and try again.",
+    "bot"
+);
 
-        console.error(error);
+console.error("Chatbot request failed:", error);
     }
 
     sendButton.disabled = false;
