@@ -89,13 +89,46 @@ contents.push({
     ]
 });
         
-        const response = await ai.models.generateContent({
-            model: "gemini-3.8-flash",
-            contents: contents,
-            config: {
-                systemInstruction: systemInstruction
+      
+        let response;
+        let lastError;
+
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+                response = await ai.models.generateContent({
+                    model: "gemini-3.8-flash",
+                    contents: contents,
+                    config: {
+                        systemInstruction: systemInstruction
+                    }
+                });
+
+                break;
+            } catch (error) {
+                lastError = error;
+
+                const errorMessage = String(error.message || "");
+                const isTemporary =
+                    error.status === 503 ||
+                    error.status === 429 ||
+                    errorMessage.includes("503") ||
+                    errorMessage.includes("429") ||
+                    errorMessage.includes("UNAVAILABLE") ||
+                    errorMessage.includes("RESOURCE_EXHAUSTED");
+
+                if (!isTemporary || attempt === 2) {
+                    throw error;
+                }
+
+                await new Promise(resolve =>
+                    setTimeout(resolve, 1500 * (2 ** attempt))
+                );
             }
-        });
+        }
+
+        if (!response) {
+            throw lastError || new Error("Gemini returned no response.");
+        }
 
         res.json({
             reply: response.text
