@@ -5,15 +5,40 @@ const sendButton = document.getElementById("send-button");
 
 let conversation = [];
 
+
 function addMessage(text, sender) {
     const message = document.createElement("div");
     message.className = `message ${sender}`;
-   message.innerHTML = text
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\n/g, "<br>");
+
+    const lines = text.split("\n");
+
+    lines.forEach((line, index) => {
+        const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+
+        if (headingMatch) {
+            const heading = document.createElement(`h${headingMatch[1].length}`);
+            heading.textContent = headingMatch[2];
+            message.appendChild(heading);
+        } else {
+            const formattedLine = document.createElement("span");
+            formattedLine.innerHTML = line
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+            message.appendChild(formattedLine);
+        }
+
+        if (index < lines.length - 1) {
+            message.appendChild(document.createElement("br"));
+        }
+    });
+
     chatBox.appendChild(message);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
 
 function addLoadingMessage() {
     const message = document.createElement("div");
