@@ -5,41 +5,123 @@ const sendButton = document.getElementById("send-button");
 
 let conversation = [];
 
-
 function addMessage(text, sender) {
     const message = document.createElement("div");
     message.className = `message ${sender}`;
 
-    const lines = text.split("\n");
+    function escapeHTML(value) {
+        return value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
 
-    lines.forEach((line, index) => {
-        const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+    function formatInline(value) {
+        let result = escapeHTML(value);
+        const codeBlocks = [];
+
+        result = result.replace(/`([^`]+)`/g, (_, code) => {
+            const placeholder = `%%CODE${codeBlocks.length}%%`;
+            codeBlocks.push(`<code>${code}</code>`);
+            return placeholder;
+        });
+
+        result = result
+            .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+            .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*([^*\n]+)\*/g, "<strong>$1</strong>")
+            .replace(/~~(.+?)~~/g, "<del>$1</del>")
+            .replace(/(^|[^_])_([^_\n]+)_/g, "$1<em>$2</em>");
+
+        result = result.replace(/%%CODE(\d+)%%/g, (_, index) => {
+            return codeBlocks[Number(index)] || "";
+        });
+
+        return result;
+    }
+
+    const lines = String(text ?? "").split("\n");
+    let activeList = null;
+    let activeQuote = null;
+
+    function closeContainers() {
+        activeList = null;
+        activeQuote = null;
+    }
+
+    lines.forEach((line) => {
+        const trimmed = line.trim();
+
+        if (!trimmed) {
+            closeContainers();
+            message.appendChild(document.createElement("br"));
+            return;
+        }
+
+        const headingMatch = trimmed.match(/^(#{1,6})\s+(.+)$/);
 
         if (headingMatch) {
-            const heading = document.createElement(`h${headingMatch[1].length}`);
-            heading.textContent = headingMatch[2];
+            closeContainers();
+
+            const heading = document.createElement(
+                `h${headingMatch[1].length}`
+            );
+
+            heading.innerHTML = formatInline(headingMatch[2]);
             message.appendChild(heading);
-        } else {
-            const formattedLine = document.createElement("span");
-            formattedLine.innerHTML = line
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-
-            message.appendChild(formattedLine);
+            return;
         }
 
-        if (index < lines.length - 1) {
-            message.appendChild(document.createElement("br"));
+        const quoteMatch = trimmed.match(/^>\s?(.*)$/);
+
+        if (quoteMatch) {
+            activeList = null;
+
+            if (!activeQuote) {
+                activeQuote = document.createElement("blockquote");
+                message.appendChild(activeQuote);
+            }
+
+            const quoteLine = document.createElement("div");
+            quoteLine.innerHTML = formatInline(quoteMatch[1]);
+            activeQuote.appendChild(quoteLine);
+            return;
         }
+
+        const unorderedMatch = trimmed.match(/^[-*+]\s+(.+)$/);
+        const orderedMatch = trimmed.match(/^\d+[.)]\s+(.+)$/);
+
+        if (unorderedMatch || orderedMatch) {
+            activeQuote = null;
+
+            const listType = unorderedMatch ? "ul" : "ol";
+
+            if (!activeList || activeList.tagName.toLowerCase() !== listType) {
+                activeList = document.createElement(listType);
+                message.appendChild(activeList);
+            }
+
+            const item = document.createElement("li");
+            item.innerHTML = formatInline(
+                unorderedMatch ? unorderedMatch[1] : orderedMatch[1]
+            );
+
+            activeList.appendChild(item);
+            return;
+        }
+
+        closeContainers();
+
+        const paragraph = document.createElement("div");
+        paragraph.innerHTML = formatInline(trimmed);
+        message.appendChild(paragraph);
     });
 
     chatBox.appendChild(message);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-
 function addLoadingMessage() {
     const message = document.createElement("div");
     message.className = "message bot loading";
